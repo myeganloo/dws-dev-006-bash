@@ -1,0 +1,15 @@
+ #!/bin/bash
+ #echo mohsen
+#echo "please enter your application name"
+ #read APPNAME
+ #echo "your applicati name is $APPNAME"
+ #($APPNAME)
+ function {
+ function {}}
+ if [ $? -eq 0 ]; then
+ echo OK
+ else
+   echo FAIL
+fi
+
+
