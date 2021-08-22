@@ -1,0 +1,105 @@
+#!/bin/bash
+ARG=($@)
+###Check Input  Value
+if [[ -z $@  ]] 
+then
+	echo command not found
+else 
+
+	if [[ $# -lt 5 ]]; then
+	echo " Usage : $0 -i interval(s) -n TImes COMMAND ,We will check enviroment valu"
+
+ else
+#	echo Right syntax 
+       for x in {0..5}; do
+		case   ${ARG[$x ]} in
+			-i)
+				Interval=${ARG[$((x+1))]}
+				;;
+			-n)
+				NUM=${ARG[$((x+1))]}            
+				;;
+			esac	
+	done
+	COMMAND=${@:5}
+	echo "Your Command is :${@:5} Interval :$Interval Times:$NUM "
+fi
+###Check Valu and run command
+if [[ $Interval -lt 0 ]] || [[ $NUM -lt 0 ]]
+then
+	echo You enter not valid Check again ,Default value set 
+	Interval=12
+	NUM=5
+fi
+
+#echo $Interval az $NUM bz $COMMAND
+case $Interval in
+	0)
+		echo 0 not accept for interval
+	        Interval=12
+		;;
+	"")
+		
+		COMMAND=${@:1}
+#		echo $COMMAND int
+		if [[ TRY_INTERVAL -eq "" ]]
+		then
+			echo enviroment variable not set for Interval
+			Interval=5
+		else
+			echo Enviroment variable will set
+			Interval=$TRY_INTERVAL
+		fi
+		;;
+esac
+
+case $NUM in
+        0)
+                echo 0 not accept
+		NUM=5
+                ;;
+        "")
+		COMMAND=${@:1}
+#		echo $COMMAND num
+                if [[ TRY_NUM -eq "" ]]
+
+	
+                then
+                        echo enviroment variable not set for Num
+                        NUM=12
+                else
+                        echo Enviroment variable will set
+                        NUM=$TRY_INTERVAL
+                fi
+                ;;
+esac
+
+#echo i= $Interval n= $NUM st= $ST cc= $COMMAND 
+##enter loop interval
+($COMMAND) &> /dev/null
+ST=$?
+#echo rez $COMMAND $ST
+if [[ $ST -ne 0 ]]; then
+	for ((A = 1 ; A < $NUM ; A++)); do
+		($COMMAND) &> /dev/null 
+	        ST=$? 
+            if [[ $ST -ne 0 ]]; then 
+		    echo check your command again !! Number $A!
+	    else 
+		    echo $ST
+		    brake
+	    fi
+	    sleep $Interval &> /dev/null
+        done  
+else
+	#echo $ST
+        echo Your Command Run Successful!! 
+fi
+if [[ $ST -eq 0 ]]; then
+	echo .
+else
+	echo 1
+	echo error 1>&2
+fi
+fi
+echo bye
