@@ -1,0 +1,56 @@
+#!/bin/bash
+
+###Chech Input Value
+ARG=($@)
+if [ $# != 5 ]; then
+	echo " Usage : $0 -i interval(s) -n TImes COMMAND " 
+ else
+	echo Right syntax 
+       for x in {0..5}; do
+		case   ${ARG[$x ]} in
+			-i)
+				Interval=${ARG[$((x+1))]}
+				;;
+			-n)
+				NUM=${ARG[$((x+1))]}            
+				;;
+			esac	
+	done
+	echo "Your Command is :$5 Interval :$Interval Times:$NUM "
+fi
+###Check Valu 
+
+###Run Command and check Result
+##Check befor loop
+
+$5 &> /dev/null
+ST=$?
+
+#echo $ST $A $NUM
+
+##enter loop interval
+
+if [ $ST != 0 ]; then
+	for ((A = 1 ; A < $NUM ; A++)); do
+	    $5 &> /dev/null 
+	    ST=$? 
+            if [ $ST != 0 ]; then 
+		    echo check your command again !! Number $A!
+	    else 
+		    echo $ST
+		    brake
+	    fi
+	    sleep $Interval &> /dev/null
+        done  
+else
+	echo $ST
+
+fi
+if [ $ST -eq 0 ]; then
+	echo $ST
+else
+	echo 1
+	echo error 1>&2
+fi
+
+
